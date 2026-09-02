@@ -1,0 +1,99 @@
+// Prisma schema for the marketplace.
+// Dev uses SQLite (zero setup). For production, swap the datasource to
+// postgresql and set DATABASE_URL to your Postgres connection string.
+// Note: SQLite doesn't support native enums, so status/role fields are
+// plain strings — valid values are enforced in the application code
+// (see lib/auth.ts and the API routes) rather than the database.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String    @id @default(uuid())
+  email        String    @unique
+  passwordHash String
+  name         String
+  role         String    @default("BUYER") // "BUYER" | "SELLER"
+  avatarUrl    String?
+  createdAt    DateTime  @default(now())
+
+  store        Store?
+  bids         Bid[]
+  ordersAsBuyer Order[]  @relation("BuyerOrders")
+  chatMessages ChatMessage[]
+}
+
+model Store {
+  id          String    @id @default(uuid())
+  name        String
+  slug        String    @unique
+  description String?
+  bannerUrl   String?
+  sellerId    String    @unique
+  seller      User      @relation(fields: [sellerId], references: [id])
+  createdAt   DateTime  @default(now())
+
+  listings    Listing[]
+}
+
+model Listing {
+  id             String        @id @default(uuid())
+  storeId        String
+  store          Store         @relation(fields: [storeId], references: [id])
+  title          String
+  description    String
+  imageUrl       String?
+  startingPrice  Int           // in cents
+  currentPrice   Int           // in cents
+  bidIncrement   Int           @default(100) // in cents
+  status         String        @default("UPCOMING") // "UPCOMING" | "LIVE" | "ENDED"
+  scheduledStart DateTime?
+  endsAt         DateTime?
+  createdAt      DateTime      @default(now())
+
+  bids           Bid[]
+  chatMessages   ChatMessage[]
+  order          Order?
+}
+
+model Bid {
+  id        String   @id @default(uuid())
+  listingId String
+  listing   Listing  @relation(fields: [listingId], references: [id])
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  amount    Int      // in cents
+  createdAt DateTime @default(now())
+
+  @@index([listingId])
+}
+
+model ChatMessage {
+  id        String   @id @default(uuid())
+  listingId String
+  listing   Listing  @relation(fields: [listingId], references: [id])
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  message   String
+  createdAt DateTime @default(now())
+
+  @@index([listingId])
+}
+
+model Order {
+  id            String      @id @default(uuid())
+  listingId     String      @unique
+  listing       Listing     @relation(fields: [listingId], references: [id])
+  buyerId       String
+  buyer         User        @relation("BuyerOrders", fields: [buyerId], references: [id])
+  amount        Int         // in cents
+  status        String      @default("PENDING") // "PENDING" | "PAID" | "SHIPPED" | "CANCELLED"
+  stripeSessionId String?
+  createdAt     DateTime    @default(now())
+}

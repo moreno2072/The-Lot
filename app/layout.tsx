@@ -1,0 +1,21 @@
+import type { Metadata } from 'next';
+import './globals.css';
+import NavBar from '@/components/NavBar';
+import { getSession } from '@/lib/auth';
+
+export const metadata: Metadata = {
+  title: 'Lot — live auctions, hosted by people who know the goods',
+  description: 'Watch a live drop, place a bid, own the lot.',
+};
+
+export default function RootLayout({ children }: { children: React.ReactNode }) {
+  const session = getSession();
+  return (
+    <html lang="en">
+      <body className="font-body min-h-screen">
+        <NavBar session={session} />
+        <main>{children}</main>
+      </body>
+    </html>
+  );
+}
