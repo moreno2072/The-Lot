@@ -3,7 +3,7 @@ import { prisma } from '@/lib/prisma';
 import { getSession } from '@/lib/auth';
 
 export async function POST(req: NextRequest, { params }: { params: { id: string } }) {
-  const session = getSession();
+  const session = await getSession();
   if (!session || session.role !== 'SELLER') {
     return NextResponse.json({ error: 'Only sellers can start a live listing.' }, { status: 403 });
   }
