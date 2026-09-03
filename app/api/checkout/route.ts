@@ -11,7 +11,7 @@ const stripe = process.env.STRIPE_SECRET_KEY
   : null;
 
 export async function POST(req: NextRequest) {
-  const session = getSession();
+  const session = await getSession(); 
   if (!session) {
     return NextResponse.json({ error: 'You must be signed in to check out.' }, { status: 401 });
   }
