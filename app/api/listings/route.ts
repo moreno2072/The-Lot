@@ -11,7 +11,7 @@ export async function GET() {
 }
 
 export async function POST(req: NextRequest) {
-  const session = getSession();
+ const session = await getSession();
   if (!session || session.role !== 'SELLER') {
     return NextResponse.json({ error: 'Only sellers can create listings.' }, { status: 403 });
   }
