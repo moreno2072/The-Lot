@@ -9,7 +9,7 @@ function formatPrice(cents: number) {
 }
 
 export default async function DashboardPage() {
-  const session = getSession();
+ const session = await getSession();
   if (!session || session.role !== 'SELLER') {
     redirect('/login');
   }
