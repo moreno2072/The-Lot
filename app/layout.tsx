@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
-  const session = getSession();
+   const session = await getSession(); 
   return (
     <html lang="en">
       <body className="font-body min-h-screen">
