@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import './globals.css';
 import NavBar from '@/components/NavBar';
 import { getSession } from '@/lib/auth';
-
+export const dynamic = 'force-dynamic';
 export const metadata: Metadata = {
   title: 'Lot — live auctions, hosted by people who know the goods',
   description: 'Watch a live drop, place a bid, own the lot.',
