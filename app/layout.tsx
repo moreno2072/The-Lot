@@ -8,7 +8,7 @@ export const metadata: Metadata = {
   description: 'Watch a live drop, place a bid, own the lot.',
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default async function RootLayout({ children }: { children: React.ReactNode }
    const session = await getSession(); 
   return (
     <html lang="en">
