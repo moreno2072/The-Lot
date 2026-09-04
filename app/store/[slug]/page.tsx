@@ -6,9 +6,7 @@ function formatPrice(cents: number) {
   return `$${(cents / 100).toFixed(2)}`;
 }
 
-export default async function StorePage({ params }: { params: { slug: string } }) {
-  const store = await prisma.store.findUnique({
-    where: { slug: params.slug },
+ export default async function StorePage({ params }: { params: Promise<{ slug: string }> }) { const { slug } = await params; const store = await prisma.store.findUnique({ where: { slug },
     include: { listings: { orderBy: [{ status: 'asc' }, { createdAt: 'desc' }] }, seller: true },
   });
 
