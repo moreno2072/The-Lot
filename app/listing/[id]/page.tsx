@@ -3,9 +3,7 @@ import { prisma } from '@/lib/prisma';
 import { getSession } from '@/lib/auth';
 import ListingRoom from '@/components/ListingRoom';
 
-export default async function ListingPage({ params }: { params: { id: string } }) {
-  const listing = await prisma.listing.findUnique({
-    where: { id: params.id },
+export default async function ListingPage({ params }: { params: Promise<{ id: string }> }) { const { id } = await params; const listing = await prisma.listing.findUnique({ where: { id }, 
     include: {
       store: true,
       bids: { orderBy: { createdAt: 'desc' }, take: 20, include: { user: true } },
