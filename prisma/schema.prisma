@@ -37,6 +37,8 @@ model Store {
   bannerUrl   String?
   sellerId    String    @unique
   seller      User      @relation(fields: [sellerId], references: [id])
+stripeAccountId String?
+stripeOnboarded Boolean @default(false)
   createdAt   DateTime  @default(now())
 
   listings    Listing[]
