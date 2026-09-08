@@ -192,7 +192,7 @@ export default function ListingRoom({
               videoContainerRef.current?.appendChild(el);
             }
           }
-          setVideoLive(true);
+          setVideoError('No camera detected on this device. Connect a webcam and reload to go live.');
         }
       } catch (err) {
         console.error('LiveKit connection error:', err);
