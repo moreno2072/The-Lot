@@ -144,7 +144,7 @@ export default function ListingRoom({
         const res = await fetch('/api/livekit/token', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ room: listing.id, identity, isSeller }),
+          body: JSON.stringify({ listingId: listing.id }), identity, isSeller }),
         });
 
         if (!res.ok) {
