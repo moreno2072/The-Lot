@@ -182,6 +182,7 @@ export default function ListingRoom({
 
         if (isSeller) {
           const tracks = await createLocalTracks({ audio: true, video: true });
+          let foundVideo = false;
           for (const track of tracks) {
             await room.localParticipant.publishTrack(track);
             if (track.kind === Track.Kind.Video) {
@@ -190,9 +191,14 @@ export default function ListingRoom({
               el.style.height = '100%';
               el.style.objectFit = 'cover';
               videoContainerRef.current?.appendChild(el);
+              foundVideo = true;
             }
           }
-          setVideoError('No camera detected on this device. Connect a webcam and reload to go live.');
+          if (foundVideo) {
+            setVideoLive(true);
+          } else {
+            setVideoError('No camera detected on this device. Connect a webcam and reload to go live.');
+          }
         }
       } catch (err) {
         console.error('LiveKit connection error:', err);
