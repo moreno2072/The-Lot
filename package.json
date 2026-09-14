@@ -20,7 +20,7 @@
     "react-dom": "^19.2.8",
     "socket.io": "^4.7.5",
     "socket.io-client": "^4.7.5",
-    "stripe": "public-preview",
+    "stripe": "^22.5.0",
     "uuid": "^9.0.1"
   },
   "devDependencies": {
