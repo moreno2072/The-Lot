@@ -28,7 +28,11 @@ export async function POST(req: NextRequest) {
   if (!accountId) {
     const account = await stripe.v2.core.accounts.create({
       contact_email: session.email,
-      dashboard: 'express',
+      dashboard: 'express', 
+      identity: {
+        country: 'us',
+        entity_type: 'individual',
+      },
       defaults: {
         responsibilities: {
           fees_collector: 'application',
