@@ -57,7 +57,7 @@ export async function POST(req: NextRequest) {
     });
   }
 
-  const origin = req.nextUrl.origin;
+    const origin = process.env.NEXT_PUBLIC_APP_URL || req.nextUrl.origin;
   const accountLink = await stripe.v2.core.accountLinks.create({
     account: accountId,
     use_case: {
