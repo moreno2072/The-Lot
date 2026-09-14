@@ -67,11 +67,12 @@ export async function POST(req: NextRequest) {
         quantity: 1,
       },
     ],
-    payment_intent_data: {
+        payment_intent_data: {
       application_fee_amount: applicationFeeAmount,
       transfer_data: {
         destination: listing.store.stripeAccountId,
       },
+      metadata: { orderId: order.id, listingId },
     },
     success_url: `${origin}/listing/${listingId}?checkout=success`,
     cancel_url: `${origin}/listing/${listingId}?checkout=cancelled`,
