@@ -25,9 +25,9 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Invalid signature.' }, { status: 400 });
   }
 
-  if (event.type === 'checkout.session.completed') {
-    const checkoutSession = event.data.object as Stripe.Checkout.Session;
-    const orderId = checkoutSession.metadata?.orderId;
+  if (event.type === 'payment_intent.succeeded') {
+    const paymentIntent = event.data.object as Stripe.PaymentIntent;
+    const orderId = paymentIntent.metadata?.orderId;
 
     if (orderId) {
       await prisma.order.update({
