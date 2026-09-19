@@ -54,6 +54,8 @@ export async function POST(req: NextRequest) {
   const applicationFeeAmount = Math.round((listing.currentPrice * PLATFORM_FEE_PERCENT) / 100);
   const origin = process.env.NEXT_PUBLIC_APP_URL || req.nextUrl.origin;
 
+  console.log('DEBUG receipt_email will be:', session.email);
+
   const checkoutSession = await stripe.checkout.sessions.create({
     mode: 'payment',
     payment_method_types: ['card'],
@@ -67,7 +69,7 @@ export async function POST(req: NextRequest) {
         quantity: 1,
       },
     ],
-        payment_intent_data: {
+    payment_intent_data: {
       application_fee_amount: applicationFeeAmount,
       transfer_data: {
         destination: listing.store.stripeAccountId,
@@ -75,7 +77,7 @@ export async function POST(req: NextRequest) {
       metadata: { orderId: order.id, listingId },
       receipt_email: session.email,
     },
-      success_url: `${origin}/listing/${listingId}?checkout=success`,
+    success_url: `${origin}/listing/${listingId}?checkout=success`,
     cancel_url: `${origin}/listing/${listingId}?checkout=cancelled`,
     metadata: { orderId: order.id, listingId },
   });
