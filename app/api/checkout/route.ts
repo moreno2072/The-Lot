@@ -73,8 +73,9 @@ export async function POST(req: NextRequest) {
         destination: listing.store.stripeAccountId,
       },
       metadata: { orderId: order.id, listingId },
+      receipt_email: session.email,
     },
-    success_url: `${origin}/listing/${listingId}?checkout=success`,
+      success_url: `${origin}/listing/${listingId}?checkout=success`,
     cancel_url: `${origin}/listing/${listingId}?checkout=cancelled`,
     metadata: { orderId: order.id, listingId },
   });
