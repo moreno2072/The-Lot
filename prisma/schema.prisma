@@ -37,10 +37,19 @@ model Store {
   bannerUrl   String?
   sellerId    String    @unique
   seller      User      @relation(fields: [sellerId], references: [id])
-stripeAccountId String?
-stripeOnboarded Boolean @default(false)
+  stripeAccountId String?
+  stripeOnboarded Boolean @default(false)
   createdAt   DateTime  @default(now())
 
+  sellerStatus    String    @default("PENDING") // "PENDING" | "APPROVED" | "REJECTED"    <-- NEW
+  businessName    String?                                                                  <-- NEW
+  productCategory String?                                                                  <-- NEW
+  socialLink      String?                                                                  <-- NEW
+  pitch           String?                                                                  <-- NEW
+  reviewedAt      DateTime?                                                                <-- NEW
+
+  listings    Listing[]
+}
   listings    Listing[]
 }
 
