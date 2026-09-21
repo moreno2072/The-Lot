@@ -73,7 +73,7 @@ export default async function DashboardPage() {
                   </div>
                   {listing.status === 'UPCOMING' && <GoLiveButton listingId={listing.id} />}
                   {listing.status === 'LIVE' && (
-                    <a
+                    
                       href={`/listing/${listing.id}`}
                       className="rounded bg-hammer px-3 py-1.5 font-mono text-xs uppercase tracking-widest text-chalk"
                     >
@@ -81,3 +81,16 @@ export default async function DashboardPage() {
                     </a>
                   )}
                 </div>
+              ))}
+            </div>
+          </div>
+
+          <div>
+            <h2 className="mb-4 font-mono text-xs uppercase tracking-widest text-ink/50">New listing</h2>
+            <NewListingForm />
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
