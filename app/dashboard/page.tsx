@@ -61,10 +61,7 @@ export default async function DashboardPage() {
                 <p className="font-mono text-sm text-ink/40">No listings yet — create your first one.</p>
               )}
               {store?.listings.map((listing) => (
-                <div
-                  key={listing.id}
-                  className="flex items-center justify-between rounded border border-hairline/10 bg-white/40 px-4 py-3"
-                >
+                <div key={listing.id} className="flex items-center justify-between rounded border border-hairline/10 bg-white/40 px-4 py-3">
                   <div>
                     <p className="font-display text-lg text-ink">{listing.title}</p>
                     <p className="font-mono text-xs text-ink/50">
@@ -72,14 +69,7 @@ export default async function DashboardPage() {
                     </p>
                   </div>
                   {listing.status === 'UPCOMING' && <GoLiveButton listingId={listing.id} />}
-                  {listing.status === 'LIVE' && (
-                    
-                      href={`/listing/${listing.id}`}
-                      className="rounded bg-hammer px-3 py-1.5 font-mono text-xs uppercase tracking-widest text-chalk"
-                    >
-                      View live
-                    </a>
-                  )}
+                  {listing.status === 'LIVE' && <a href={`/listing/${listing.id}`} className="rounded bg-hammer px-3 py-1.5 font-mono text-xs uppercase tracking-widest text-chalk">View live</a>}
                 </div>
               ))}
             </div>
