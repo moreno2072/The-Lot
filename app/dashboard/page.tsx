@@ -81,16 +81,3 @@ export default async function DashboardPage() {
                     </a>
                   )}
                 </div>
-              ))}
-            </div>
-          </div>
-
-          <div>
-            <h2 className="mb-4 font-mono text-xs uppercase tracking-widest text-ink/50">New listing</h2>
-            <NewListingForm />
-          </div>
-        </div>
-      )}
-    </div>
-  );
-}
