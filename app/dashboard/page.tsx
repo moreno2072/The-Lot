@@ -73,7 +73,7 @@ export default async function DashboardPage() {
                   </div>
                   {listing.status === 'UPCOMING' && <GoLiveButton listingId={listing.id} />}
                   {listing.status === 'LIVE' && (
-                    
+                    <a
                       href={`/listing/${listing.id}`}
                       className="rounded bg-hammer px-3 py-1.5 font-mono text-xs uppercase tracking-widest text-chalk"
                     >
