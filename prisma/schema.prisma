@@ -41,15 +41,13 @@ model Store {
   stripeOnboarded Boolean @default(false)
   createdAt   DateTime  @default(now())
 
-  sellerStatus    String    @default("PENDING") // "PENDING" | "APPROVED" | "REJECTED"    
-  businessName    String?                                                                  
-  productCategory String?                                                                  
-  socialLink      String?                                                                 
-  pitch           String?                                                                 
-  reviewedAt      DateTime?                                                                
+  sellerStatus    String    @default("PENDING") // "PENDING" | "APPROVED" | "REJECTED"
+  businessName    String?
+  productCategory String?
+  socialLink      String?
+  pitch           String?
+  reviewedAt      DateTime?
 
-  listings    Listing[]
-}
   listings    Listing[]
 }
 
