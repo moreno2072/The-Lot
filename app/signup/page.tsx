@@ -23,6 +23,10 @@ export default function SignupPage() {
         email: form.get('email'),
         password: form.get('password'),
         role,
+        businessName: form.get('businessName'),
+        productCategory: form.get('productCategory'),
+        socialLink: form.get('socialLink'),
+        pitch: form.get('pitch'),
       }),
     });
 
@@ -45,18 +49,10 @@ export default function SignupPage() {
       </p>
 
       <div className="mt-6 flex gap-2 font-mono text-xs uppercase tracking-widest">
-        <button
-          type="button"
-          onClick={() => setRole('BUYER')}
-          className={`flex-1 rounded border px-3 py-2 ${role === 'BUYER' ? 'border-ink bg-ink text-chalk' : 'border-hairline/20 text-ink/60'}`}
-        >
+        <button type="button" onClick={() => setRole('BUYER')} className={`flex-1 rounded border px-3 py-2 ${role === 'BUYER' ? 'border-ink bg-ink text-chalk' : 'border-hairline/20 text-ink/60'}`}>
           Buyer
         </button>
-        <button
-          type="button"
-          onClick={() => setRole('SELLER')}
-          className={`flex-1 rounded border px-3 py-2 ${role === 'SELLER' ? 'border-ink bg-ink text-chalk' : 'border-hairline/20 text-ink/60'}`}
-        >
+        <button type="button" onClick={() => setRole('SELLER')} className={`flex-1 rounded border px-3 py-2 ${role === 'SELLER' ? 'border-ink bg-ink text-chalk' : 'border-hairline/20 text-ink/60'}`}>
           Seller
         </button>
       </div>
@@ -75,13 +71,31 @@ export default function SignupPage() {
           <input name="password" type="password" required minLength={8} className="w-full rounded border border-hairline/20 bg-white/60 px-3 py-2 text-ink" />
         </div>
 
+        {role === 'SELLER' && (
+          <div className="space-y-4 border-t border-hairline/10 pt-4">
+            <p className="font-mono text-xs uppercase tracking-widest text-ink/50">Seller application</p>
+            <div>
+              <label className="mb-1 block font-mono text-xs uppercase tracking-widest text-ink/60">Business name</label>
+              <input name="businessName" required className="w-full rounded border border-hairline/20 bg-white/60 px-3 py-2 text-ink" />
+            </div>
+            <div>
+              <label className="mb-1 block font-mono text-xs uppercase tracking-widest text-ink/60">What do you sell?</label>
+              <input name="productCategory" required placeholder="e.g. bath & body, jewelry, vintage clothing" className="w-full rounded border border-hairline/20 bg-white/60 px-3 py-2 text-ink" />
+            </div>
+            <div>
+              <label className="mb-1 block font-mono text-xs uppercase tracking-widest text-ink/60">Instagram / TikTok / website</label>
+              <input name="socialLink" placeholder="https://instagram.com/yourshop" className="w-full rounded border border-hairline/20 bg-white/60 px-3 py-2 text-ink" />
+            </div>
+            <div>
+              <label className="mb-1 block font-mono text-xs uppercase tracking-widest text-ink/60">Tell us about your shop</label>
+              <textarea name="pitch" rows={3} required className="w-full rounded border border-hairline/20 bg-white/60 px-3 py-2 text-ink"></textarea>
+            </div>
+          </div>
+        )}
+
         {error && <p className="text-sm text-hammer">{error}</p>}
 
-        <button
-          type="submit"
-          disabled={loading}
-          className="w-full rounded bg-ink py-2.5 font-mono text-xs uppercase tracking-widest text-chalk hover:bg-hammer transition-colors disabled:opacity-50"
-        >
+        <button type="submit" disabled={loading} className="w-full rounded bg-ink py-2.5 font-mono text-xs uppercase tracking-widest text-chalk hover:bg-hammer transition-colors disabled:opacity-50">
           {loading ? 'Creating account…' : 'Create account'}
         </button>
       </form>
