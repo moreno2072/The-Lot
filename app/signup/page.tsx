@@ -1,104 +1,49 @@
-'use client';
+import { NextRequest, NextResponse } from 'next/server';
+import bcrypt from 'bcryptjs';
+import { prisma } from '@/lib/prisma';
+import { signSession, sessionCookieOptions } from '@/lib/auth';
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+export async function POST(req: NextRequest) {
+  const { email, password, name, role, businessName, productCategory, socialLink, pitch } = await req.json();
 
-export default function SignupPage() {
-  const router = useRouter();
-  const [role, setRole] = useState<'BUYER' | 'SELLER'>('BUYER');
-  const [error, setError] = useState('');
-  const [loading, setLoading] = useState(false);
-
-  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    setError('');
-    setLoading(true);
-    const form = new FormData(e.currentTarget);
-
-    const res = await fetch('/api/auth/signup', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        name: form.get('name'),
-        email: form.get('email'),
-        password: form.get('password'),
-        role,
-        businessName: form.get('businessName'),
-        productCategory: form.get('productCategory'),
-        socialLink: form.get('socialLink'),
-        pitch: form.get('pitch'),
-      }),
-    });
-
-    setLoading(false);
-    if (!res.ok) {
-      const data = await res.json();
-      setError(data.error || 'Something went wrong.');
-      return;
-    }
-
-    router.push(role === 'SELLER' ? '/dashboard' : '/');
-    router.refresh();
+  if (!email || !password || !name) {
+    return NextResponse.json({ error: 'Missing required fields.' }, { status: 400 });
   }
 
-  return (
-    <div className="mx-auto max-w-sm px-6 py-16">
-      <h1 className="font-display text-3xl text-ink">Create an account</h1>
-      <p className="mt-2 text-sm text-ink/60">
-        Join as a buyer to bid, or a seller to host your own drops.
-      </p>
+  const existing = await prisma.user.findUnique({ where: { email } });
+  if (existing) {
+    return NextResponse.json({ error: 'An account with that email already exists.' }, { status: 409 });
+  }
 
-      <div className="mt-6 flex gap-2 font-mono text-xs uppercase tracking-widest">
-        <button type="button" onClick={() => setRole('BUYER')} className={`flex-1 rounded border px-3 py-2 ${role === 'BUYER' ? 'border-ink bg-ink text-chalk' : 'border-hairline/20 text-ink/60'}`}>
-          Buyer
-        </button>
-        <button type="button" onClick={() => setRole('SELLER')} className={`flex-1 rounded border px-3 py-2 ${role === 'SELLER' ? 'border-ink bg-ink text-chalk' : 'border-hairline/20 text-ink/60'}`}>
-          Seller
-        </button>
-      </div>
+  const passwordHash = await bcrypt.hash(password, 10);
+  const user = await prisma.user.create({
+    data: {
+      email,
+      passwordHash,
+      name,
+      role: role === 'SELLER' ? 'SELLER' : 'BUYER',
+    },
+  });
 
-      <form onSubmit={handleSubmit} className="mt-6 space-y-4">
-        <div>
-          <label className="mb-1 block font-mono text-xs uppercase tracking-widest text-ink/60">Name</label>
-          <input name="name" required className="w-full rounded border border-hairline/20 bg-white/60 px-3 py-2 text-ink" />
-        </div>
-        <div>
-          <label className="mb-1 block font-mono text-xs uppercase tracking-widest text-ink/60">Email</label>
-          <input name="email" type="email" required className="w-full rounded border border-hairline/20 bg-white/60 px-3 py-2 text-ink" />
-        </div>
-        <div>
-          <label className="mb-1 block font-mono text-xs uppercase tracking-widest text-ink/60">Password</label>
-          <input name="password" type="password" required minLength={8} className="w-full rounded border border-hairline/20 bg-white/60 px-3 py-2 text-ink" />
-        </div>
+  if (user.role === 'SELLER') {
+    const slug = name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+    await prisma.store.create({
+      data: {
+        name,
+        slug: `${slug}-${user.id.slice(0, 6)}`,
+        sellerId: user.id,
+        sellerStatus: 'PENDING',
+        businessName: businessName || null,
+        productCategory: productCategory || null,
+        socialLink: socialLink || null,
+        pitch: pitch || null,
+      },
+    });
+  }
 
-        {role === 'SELLER' && (
-          <div className="space-y-4 border-t border-hairline/10 pt-4">
-            <p className="font-mono text-xs uppercase tracking-widest text-ink/50">Seller application</p>
-            <div>
-              <label className="mb-1 block font-mono text-xs uppercase tracking-widest text-ink/60">Business name</label>
-              <input name="businessName" required className="w-full rounded border border-hairline/20 bg-white/60 px-3 py-2 text-ink" />
-            </div>
-            <div>
-              <label className="mb-1 block font-mono text-xs uppercase tracking-widest text-ink/60">What do you sell?</label>
-              <input name="productCategory" required placeholder="e.g. bath & body, jewelry, vintage clothing" className="w-full rounded border border-hairline/20 bg-white/60 px-3 py-2 text-ink" />
-            </div>
-            <div>
-              <label className="mb-1 block font-mono text-xs uppercase tracking-widest text-ink/60">Instagram / TikTok / website</label>
-              <input name="socialLink" placeholder="https://instagram.com/yourshop" className="w-full rounded border border-hairline/20 bg-white/60 px-3 py-2 text-ink" />
-            </div>
-            <div>
-              <label className="mb-1 block font-mono text-xs uppercase tracking-widest text-ink/60">Tell us about your shop</label>
-              <textarea name="pitch" rows={3} required className="w-full rounded border border-hairline/20 bg-white/60 px-3 py-2 text-ink"></textarea>
-            </div>
-          </div>
-        )}
-
-        {error && <p className="text-sm text-hammer">{error}</p>}
-
-        <button type="submit" disabled={loading} className="w-full rounded bg-ink py-2.5 font-mono text-xs uppercase tracking-widest text-chalk hover:bg-hammer transition-colors disabled:opacity-50">
-          {loading ? 'Creating account…' : 'Create account'}
-        </button>
-      </form>
-    </div>
-  );
+  const token = signSession({ userId: user.id, email: user.email, name: user.name, role: user.role });
+  const res = NextResponse.json({ ok: true, user: { id: user.id, name: user.name, role: user.role } });
+  const cookieOpts = sessionCookieOptions();
+  res.cookies.set(cookieOpts.name, token, cookieOpts);
+  return res;
 }
