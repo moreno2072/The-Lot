@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "node server.js",
-   "build": "prisma generate && next build",
+    "build": "prisma generate && next build --webpack",
     "start": "prisma db push --accept-data-loss && NODE_ENV=production node server.js",
     "db:push": "prisma db push",
     "db:studio": "prisma studio",
@@ -14,7 +14,8 @@
     "@prisma/client": "^5.19.1",
     "bcryptjs": "^2.4.3",
     "jsonwebtoken": "^9.0.2",
-     "livekit-client": "^2.7.0", "livekit-server-sdk": "^2.9.0",
+    "livekit-client": "^2.7.0",
+    "livekit-server-sdk": "^2.9.0",
     "next": "^16.3.4",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
