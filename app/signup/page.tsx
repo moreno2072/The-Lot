@@ -23,6 +23,10 @@ export default function SignupPage() {
         email: form.get('email'),
         password: form.get('password'),
         role,
+        businessName: form.get('businessName'),
+        productCategory: form.get('productCategory'),
+        socialLink: form.get('socialLink'),
+        pitch: form.get('pitch'),
       }),
     });
 
@@ -66,6 +70,28 @@ export default function SignupPage() {
           <label className="mb-1 block font-mono text-xs uppercase tracking-widest text-ink/60">Password</label>
           <input name="password" type="password" required minLength={8} className="w-full rounded border border-hairline/20 bg-white/60 px-3 py-2 text-ink" />
         </div>
+
+        {role === 'SELLER' && (
+          <div className="space-y-4 border-t border-hairline/10 pt-4">
+            <p className="font-mono text-xs uppercase tracking-widest text-ink/50">Seller application</p>
+            <div>
+              <label className="mb-1 block font-mono text-xs uppercase tracking-widest text-ink/60">Business name</label>
+              <input name="businessName" required className="w-full rounded border border-hairline/20 bg-white/60 px-3 py-2 text-ink" />
+            </div>
+            <div>
+              <label className="mb-1 block font-mono text-xs uppercase tracking-widest text-ink/60">What do you sell?</label>
+              <input name="productCategory" required placeholder="e.g. bath & body, jewelry, vintage clothing" className="w-full rounded border border-hairline/20 bg-white/60 px-3 py-2 text-ink" />
+            </div>
+            <div>
+              <label className="mb-1 block font-mono text-xs uppercase tracking-widest text-ink/60">Instagram / TikTok / website</label>
+              <input name="socialLink" placeholder="https://instagram.com/yourshop" className="w-full rounded border border-hairline/20 bg-white/60 px-3 py-2 text-ink" />
+            </div>
+            <div>
+              <label className="mb-1 block font-mono text-xs uppercase tracking-widest text-ink/60">Tell us about your shop</label>
+              <textarea name="pitch" rows={3} required className="w-full rounded border border-hairline/20 bg-white/60 px-3 py-2 text-ink"></textarea>
+            </div>
+          </div>
+        )}
 
         {error && <p className="text-sm text-hammer">{error}</p>}
 
