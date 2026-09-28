@@ -4,7 +4,7 @@ import { prisma } from '@/lib/prisma';
 import { signSession, sessionCookieOptions } from '@/lib/auth';
 
 export async function POST(req: NextRequest) {
-  const { email, password, name, role } = await req.json();
+  const { email, password, name, role, businessName, productCategory, socialLink, pitch } = await req.json();
 
   if (!email || !password || !name) {
     return NextResponse.json({ error: 'Missing required fields.' }, { status: 400 });
@@ -25,11 +25,20 @@ export async function POST(req: NextRequest) {
     },
   });
 
-  // Sellers get a store automatically so they can start listing right away.
+  // Sellers get a store automatically, but start as PENDING until approved.
   if (user.role === 'SELLER') {
     const slug = name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
     await prisma.store.create({
-      data: { name, slug: `${slug}-${user.id.slice(0, 6)}`, sellerId: user.id },
+      data: {
+        name,
+        slug: `${slug}-${user.id.slice(0, 6)}`,
+        sellerId: user.id,
+        sellerStatus: 'PENDING',
+        businessName: businessName || null,
+        productCategory: productCategory || null,
+        socialLink: socialLink || null,
+        pitch: pitch || null,
+      },
     });
   }
 
