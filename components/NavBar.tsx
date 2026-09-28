@@ -2,6 +2,11 @@ import Link from 'next/link';
 import type { SessionPayload } from '@/lib/auth';
 import LogoutButton from './LogoutButton';
 
+function isAdmin(email: string | undefined) {
+  const list = (process.env.ADMIN_EMAILS || '').split(',').map((e) => e.trim().toLowerCase()).filter(Boolean);
+  return Boolean(email && list.includes(email.toLowerCase()));
+}
+
 export default function NavBar({ session }: { session: SessionPayload | null }) {
   return (
     <header className="sticky top-0 z-40 border-b border-hairline/10 bg-chalk/95 backdrop-blur">
@@ -15,6 +20,9 @@ export default function NavBar({ session }: { session: SessionPayload | null }) 
           {session?.role === 'SELLER' && (
             <Link href="/dashboard" className="hover:text-ink">Dashboard</Link>
           )}
+          {isAdmin(session?.email) && (
+            <Link href="/admin/sellers" className="hover:text-ink">Admin</Link>
+          )}
         </nav>
 
         <div className="flex items-center gap-3">
@@ -25,18 +33,8 @@ export default function NavBar({ session }: { session: SessionPayload | null }) 
             </>
           ) : (
             <>
-              <Link
-                href="/login"
-                className="font-mono text-xs uppercase tracking-widest text-ink/70 hover:text-ink"
-              >
-                Sign in
-              </Link>
-              <Link
-                href="/signup"
-                className="rounded bg-ink px-4 py-2 font-mono text-xs uppercase tracking-widest text-chalk hover:bg-hammer transition-colors"
-              >
-                Join
-              </Link>
+              <Link href="/login" className="font-mono text-xs uppercase tracking-widest text-ink/70 hover:text-ink">Sign in</Link>
+              <Link href="/signup" className="rounded bg-ink px-4 py-2 font-mono text-xs uppercase tracking-widest text-chalk hover:bg-hammer transition-colors">Join</Link>
             </>
           )}
         </div>
