@@ -11,7 +11,7 @@ export async function GET() {
 }
 
 export async function POST(req: NextRequest) {
- const session = await getSession();
+  const session = await getSession();
   if (!session || session.role !== 'SELLER') {
     return NextResponse.json({ error: 'Only sellers can create listings.' }, { status: 403 });
   }
@@ -21,7 +21,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'No store found for this seller.' }, { status: 404 });
   }
 
-  const { title, description, startingPrice, imageUrl, bidIncrement } = await req.json();
+  const { title, description, startingPrice, imageUrl, bidIncrement, buyNowPrice } = await req.json();
   if (!title || !startingPrice) {
     return NextResponse.json({ error: 'Title and starting price are required.' }, { status: 400 });
   }
@@ -35,6 +35,7 @@ export async function POST(req: NextRequest) {
       startingPrice: Math.round(Number(startingPrice) * 100),
       currentPrice: Math.round(Number(startingPrice) * 100),
       bidIncrement: bidIncrement ? Math.round(Number(bidIncrement) * 100) : 100,
+      buyNowPrice: buyNowPrice ? Math.round(Number(buyNowPrice) * 100) : null,
       status: 'UPCOMING',
     },
   });
