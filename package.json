@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "node server.js",
     "build": "prisma generate && next build",
-    "start": "prisma db push --accept-data-loss && NODE_ENV=production node server.js",
+    "start": "prisma db push && NODE_ENV=production node server.js",
     "db:push": "prisma db push",
     "db:studio": "prisma studio",
     "db:seed": "node prisma/seed.js"
