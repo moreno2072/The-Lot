@@ -45,8 +45,7 @@ export default async function DashboardPage() {
             </p>
           ) : (
             <p className="font-mono text-sm text-ink/70">
-              Your seller application is under review. We'll email you once it's approved — you'll
-              be able to go live and connect payouts at that point.
+              Your seller application is under review. Check back here — this page will update once you're approved and you'll be able to go live and connect payouts.
             </p>
           )}
         </div>
